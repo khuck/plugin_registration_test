@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 unamestr=`uname -s`
 if [[ ${unamestr} == "Darwin" ]] ; then
@@ -9,23 +10,26 @@ else
     suffix="so"
 fi
 
-echo "##################### Static, no tool linked ####################"
+echo "################# Dynamic, no plugin linked #################"
+./program_tool_only
+
+echo "################# Static, no tool linked ####################"
 ./program_static_notool
 
-echo "##################### Static, tools linked   ####################"
+echo "################# Static, tools linked   ####################"
 ./program_static
 
-echo "##################### Dynamic, no tool linked ###################"
+echo "################# Dynamic, no tool linked ###################"
 ./program_dynamic_notool
 
-echo "##################### Dynamic, tools linked   ###################"
+echo "################# Dynamic, tools linked   ###################"
 ./program_dynamic
 
-echo "##################### Dynamic, one tool preload #################"
+echo "################# Dynamic, one tool preload #################"
 export ${preload}=./libtool1.${suffix}
 ./program_dynamic_notool
 
-echo "##################### Dynamic, two tool preload #################"
+echo "################# Dynamic, two tool preload #################"
 export ${preload}=./libtool1.${suffix}:./libtool2.${suffix}
 ./program_dynamic_notool
 

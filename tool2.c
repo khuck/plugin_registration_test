@@ -1,8 +1,8 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "string.h"
-
 #include "tool.h"
+#include "prettyprint.h"
 
 static void __attribute__((constructor)) initme(void);
 
@@ -20,8 +20,8 @@ void tool2_finalize(void) {
 
 static void initme(void) {
     plugin_pointers_t pointers;
-    memset(&pointers, 0, sizeof(plugin_pointers_t));
     printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
+    memset(&pointers, 0, sizeof(plugin_pointers_t));
     pointers.tool_name = "two";
     pointers.init = &tool2_init;
     pointers.function = &tool2_function;
@@ -29,3 +29,5 @@ static void initme(void) {
     register_tool(&pointers);
 }
 
+__attribute__((visibility("default")))
+__attribute__((weak)) void register_tool(plugin_pointers_t * tool);

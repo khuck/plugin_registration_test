@@ -2,6 +2,10 @@
 #include "stdio.h"
 #include "plugin.h"
 #include "tool.h"
+#include "prettyprint.h"
+
+/* This is a prototype implementation of an API to add a plugin
+   interface to a library or application. */
 
 /* Assume only two tools for this test. */
 
@@ -9,6 +13,9 @@ plugin_init_t init_funcs[2] = {NULL};
 plugin_function_t function_funcs[2] = {NULL};
 plugin_finalize_t finalize_funcs[2] = {NULL};
 int num_tools = 0;
+
+/* For each tool registered, call the initialization function
+   for the tool library */
 
 void plugin_init(void) {
     int i;
@@ -18,6 +25,9 @@ void plugin_init(void) {
     }
 }
 
+/* For each tool registered, call the example function
+   for the tool library */
+
 void plugin_function(void) {
     int i;
     printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
@@ -26,6 +36,9 @@ void plugin_function(void) {
     }
 }
 
+/* For each tool registered, call the finalize function
+   for the tool library */
+
 void plugin_finalize(void) {
     int i;
     printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
@@ -33,6 +46,10 @@ void plugin_finalize(void) {
         finalize_funcs[i]();
     }
 }
+
+/* Each tool will register with the plugin interface when
+   they are loaded, using a static global initializer function
+   to call this tool registration function */
 
 void register_tool(plugin_pointers_t * pointers) {
     printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);

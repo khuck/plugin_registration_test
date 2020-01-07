@@ -1,8 +1,8 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "string.h"
-
 #include "tool.h"
+#include "prettyprint.h"
 
 static void __attribute__((constructor)) initme(void);
 
@@ -30,9 +30,4 @@ static void initme(void) {
 }
 
 __attribute__((visibility("default")))
-__attribute__((weak)) void register_tool(plugin_pointers_t * tool)
-#if defined(__clang__) && defined(__APPLE__)
-{ printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__); }
-#else
-;
-#endif
+__attribute__((weak)) void register_tool(plugin_pointers_t * tool);
