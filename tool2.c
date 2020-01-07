@@ -19,9 +19,9 @@ void tool2_finalize(void) {
 }
 
 static void initme(void) {
-    printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
     plugin_pointers_t pointers;
     memset(&pointers, 0, sizeof(plugin_pointers_t));
+    printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
     pointers.tool_name = "two";
     pointers.init = &tool2_init;
     pointers.function = &tool2_function;

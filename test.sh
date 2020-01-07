@@ -12,13 +12,13 @@ fi
 echo "##################### Static, no tool linked ####################"
 ./program_static_notool
 
-echo "##################### Static, tool linked    ####################"
+echo "##################### Static, tools linked   ####################"
 ./program_static
 
 echo "##################### Dynamic, no tool linked ###################"
 ./program_dynamic_notool
 
-echo "##################### Dynamic, tool linked    ###################"
+echo "##################### Dynamic, tools linked   ###################"
 ./program_dynamic
 
 echo "##################### Dynamic, one tool preload #################"

@@ -11,24 +11,24 @@ plugin_finalize_t finalize_funcs[2] = {NULL};
 int num_tools = 0;
 
 void plugin_init(void) {
-    printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
     int i;
+    printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
     for (i = 0 ; i < num_tools ; i++) {
         init_funcs[i]();
     }
 }
 
 void plugin_function(void) {
-    printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
     int i;
+    printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
     for (i = 0 ; i < num_tools ; i++) {
         function_funcs[i]();
     }
 }
 
 void plugin_finalize(void) {
-    printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
     int i;
+    printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
     for (i = 0 ; i < num_tools ; i++) {
         finalize_funcs[i]();
     }
