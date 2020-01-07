@@ -35,8 +35,8 @@ program_dynamic: main.o libplugin.$(SHARED_SUFFIX) libtool1.$(SHARED_SUFFIX) lib
 program_dynamic_notool: main.o libplugin.$(SHARED_SUFFIX)
 	$(CC) $(LDFLAGS) -o $@ main.o -L. -lplugin
 
-program_tool_only: main.o libtool1.a
-	$(CC) $(LDFLAGS) -o $@ main.o libtool1.a $(LDFLAGS_STATIC)
+program_tool_only: main_no_plugin.o libtool1.a
+	$(CC) $(LDFLAGS) -o $@ main_no_plugin.o libtool1.a $(LDFLAGS_STATIC)
 
 %.o : %.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@
