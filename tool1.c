@@ -20,13 +20,17 @@ void tool_finalize(void) {
 
 static void initme(void) {
     plugin_pointers_t pointers;
+    plugin_register_t reg_function;
     printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
     memset(&pointers, 0, sizeof(plugin_pointers_t));
     pointers.tool_name = "one";
     pointers.init = &tool_init;
     pointers.function = &tool_function;
     pointers.finalize = &tool_finalize;
-    register_tool(&pointers);
+    reg_function = &register_tool;
+    if (reg_function != NULL) {
+        reg_function(&pointers);
+    }
 }
 
 __attribute__((visibility("default")))
