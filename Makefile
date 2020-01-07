@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-O0 -g -fPIC
+CFLAGS=-O0 -g -fPIC -Werror -Wall
 
 UNAME_S := $(shell uname -s)
 LDFLAGS_WHOLE :=
