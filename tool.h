@@ -9,7 +9,6 @@
 typedef void (*plugin_init_t)(void);
 typedef void (*plugin_function_t)(void);
 typedef void (*plugin_finalize_t)(void);
-typedef void (*plugin_register_t)(void);
 
 typedef struct plugin_pointers {
     char * tool_name;
@@ -18,4 +17,6 @@ typedef struct plugin_pointers {
     plugin_finalize_t finalize;
 } plugin_pointers_t;
 
-extern void register_tool(plugin_pointers_t * tool);
+typedef void (*plugin_register_t)(plugin_pointers_t *);
+
+extern __attribute__((weak)) void register_tool(plugin_pointers_t * tool);

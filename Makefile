@@ -1,6 +1,7 @@
 CC=gcc
 CFLAGS=-O0 -g -fPIC -Werror -Wall -ansi -pedantic
 LDFLAGS=-O0 -g
+HEADERS=$(wildcard *.h)
 
 UNAME_S := $(shell uname -s)
 LDFLAGS_WHOLE :=
@@ -20,21 +21,24 @@ else
     LDFLAGS_DYNAMIC:=-shared
 endif
 
-default: program_static_notool program_static program_dynamic program_dynamic_notool
+default: program_static_notool program_static program_dynamic program_dynamic_notool program_tool_only
 
 program_static: main.o libplugin.a libtool1.a libtool2.a
-	$(CC) $(LDFLAGS) -o program_static main.o libplugin.a $(LDFLAGS_WHOLE) $(LDFLAGS_STATIC)
+	$(CC) $(LDFLAGS) -o $@ main.o libplugin.a $(LDFLAGS_WHOLE) $(LDFLAGS_STATIC)
 
 program_static_notool: main.o libplugin.a
-	$(CC) $(LDFLAGS) -o program_static_notool main.o libplugin.a $(LDFLAGS_STATIC)
+	$(CC) $(LDFLAGS) -o $@ main.o libplugin.a $(LDFLAGS_STATIC)
 
 program_dynamic: main.o libplugin.$(SHARED_SUFFIX) libtool1.$(SHARED_SUFFIX) libtool2.$(SHARED_SUFFIX)
-	$(CC) $(LDFLAGS) -o program_dynamic main.o -L. -lplugin -ltool1 -ltool2
+	$(CC) $(LDFLAGS) -o $@ main.o -L. -lplugin -ltool1 -ltool2
 
 program_dynamic_notool: main.o libplugin.$(SHARED_SUFFIX)
-	$(CC) $(LDFLAGS) -o program_dynamic_notool main.o -L. -lplugin
+	$(CC) $(LDFLAGS) -o $@ main.o -L. -lplugin
 
-%.o : %.c
+program_tool_only: main.o libtool1.a
+	$(CC) $(LDFLAGS) -o $@ main.o libtool1.a $(LDFLAGS_STATIC)
+
+%.o : %.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 libtool1.a: tool1.o

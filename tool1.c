@@ -20,8 +20,8 @@ void tool_finalize(void) {
 
 static void initme(void) {
     plugin_pointers_t pointers;
-    memset(&pointers, 0, sizeof(plugin_pointers_t));
     printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
+    memset(&pointers, 0, sizeof(plugin_pointers_t));
     pointers.tool_name = "one";
     pointers.init = &tool_init;
     pointers.function = &tool_function;
@@ -29,3 +29,10 @@ static void initme(void) {
     register_tool(&pointers);
 }
 
+__attribute__((visibility("default")))
+__attribute__((weak)) void register_tool(plugin_pointers_t * tool)
+#if defined(__clang__) && defined(__APPLE__)
+{ printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__); }
+#else
+;
+#endif
