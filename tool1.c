@@ -5,6 +5,9 @@
 #include "prettyprint.h"
 
 static void __attribute__((constructor)) initme(void);
+static void __attribute__((destructor)) finime(void);
+
+static int tool_id;
 
 void tool_init(void) {
     printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
@@ -35,9 +38,21 @@ static void initme(void) {
         pointers.init = &tool_init;
         pointers.function = &tool_function;
         pointers.finalize = &tool_finalize;
-        reg_function(&pointers);
+        tool_id = reg_function(&pointers);
+    }
+}
+
+static void finime(void) {
+    plugin_deregister_t dereg_function;
+    dereg_function = &deregister_tool;
+    if (dereg_function != NULL) {
+        dereg_function(tool_id);
     }
 }
 
 __attribute__((visibility("default")))
-__attribute__((weak)) void register_tool(plugin_pointers_t * tool);
+__attribute__((weak)) int register_tool(plugin_pointers_t * tool);
+
+__attribute__((visibility("default")))
+__attribute__((weak)) void deregister_tool(int tool_id);
+

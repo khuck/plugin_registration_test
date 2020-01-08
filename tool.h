@@ -11,6 +11,8 @@ typedef struct plugin_pointers {
     plugin_finalize_t finalize;
 } plugin_pointers_t;
 
-typedef void (*plugin_register_t)(plugin_pointers_t *);
+typedef int (*plugin_register_t)(plugin_pointers_t *);
+typedef void (*plugin_deregister_t)(int);
 
-extern __attribute__((weak)) void register_tool(plugin_pointers_t * tool);
+extern __attribute__((weak)) int register_tool(plugin_pointers_t * tool);
+extern __attribute__((weak)) void deregister_tool(int tool_id);

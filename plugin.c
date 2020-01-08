@@ -51,12 +51,19 @@ void plugin_finalize_(void) {
    they are loaded, using a static global initializer function
    to call this tool registration function */
 
-void register_tool(plugin_pointers_t * pointers) {
+int register_tool(plugin_pointers_t * pointers) {
+    int tool_id = num_tools;
     printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
     printf("Registering %s\n", pointers->tool_name);
     init_funcs[num_tools] = pointers->init;
     function_funcs[num_tools] = pointers->function;
     finalize_funcs[num_tools] = pointers->finalize;
     num_tools = num_tools + 1;
+    return (tool_id);
 }
 
+void deregister_tool(int tool_id) {
+    printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
+    printf("Deregistering %d\n", tool_id);
+    return;
+}
