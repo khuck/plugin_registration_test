@@ -63,7 +63,14 @@ int register_tool(plugin_pointers_t * pointers) {
 }
 
 void deregister_tool(int tool_id) {
+    int i;
     printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
     printf("Deregistering %d\n", tool_id);
+    for (i = tool_id ; i < num_tools; i++) {
+        init_funcs[i] = init_funcs[num_tools];
+        function_funcs[i] = function_funcs[num_tools];
+        finalize_funcs[i] = finalize_funcs[num_tools];
+    }
+    num_tools = num_tools - 1;
     return;
 }
