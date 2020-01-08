@@ -67,4 +67,4 @@ libplugin.$(SHARED_SUFFIX): plugin.o
 	$(CC) $(LDFLAGS_DYNAMIC) $(LDFLAGS) -o libplugin.$(SHARED_SUFFIX) plugin.o
 
 clean:
-	rm -rf *.o *.a *.$(SHARED_SUFFIX) program_static* program_dynamic*
+	rm -rf *.o *.a *.$(SHARED_SUFFIX) program_*
