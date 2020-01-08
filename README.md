@@ -23,84 +23,97 @@ You should see output like:
 
 ```bash
 $ make ; ./test.sh 
-gcc -O0 -g -fPIC -c main.c -o main.o
-gcc -O0 -g -fPIC -c plugin.c -o plugin.o
+$ make clean; make
+rm -rf *.o *.a *.so program_static* program_dynamic*
+gcc -O0 -g -fPIC -Werror -Wall -ansi -pedantic -c main.c -o main.o
+gcc -O0 -g -fPIC -Werror -Wall -ansi -pedantic -c plugin.c -o plugin.o
 ar -crs libplugin.a plugin.o
-gcc -O0 -g -fPIC -o program_static_notool main.o libplugin.a 
-gcc -O0 -g -fPIC -c tool1.c -o tool1.o
+gcc -O0 -g -o program_static_notool main.o libplugin.a -static
+gcc -O0 -g -fPIC -Werror -Wall -ansi -pedantic -c tool1.c -o tool1.o
 ar -crs libtool1.a tool1.o
-gcc -O0 -g -fPIC -c tool2.c -o tool2.o
+gcc -O0 -g -fPIC -Werror -Wall -ansi -pedantic -c tool2.c -o tool2.o
 ar -crs libtool2.a tool2.o
-gcc -O0 -g -fPIC -o program_static main.o libplugin.a -Wl,-all_load libtool1.a -Wl,-all_load libtool2.a 
-gcc -shared -undefined dynamic_lookup -o libplugin.dylib plugin.o
-gcc -shared -undefined dynamic_lookup -o libtool1.dylib tool1.o
-gcc -shared -undefined dynamic_lookup -o libtool2.dylib tool2.o
-gcc -O0 -g -fPIC -o program_dynamic main.o -L. -lplugin -ltool1 -ltool2
-gcc -O0 -g -fPIC -o program_dynamic_notool main.o -L. -lplugin
-##################### Static, no tool linked ####################
-plugin.c void plugin_init(void)
-plugin.c void plugin_function(void)
-plugin.c void plugin_finalize(void)
-##################### Static, tool linked    ####################
-tool1.c void initme(void)
-plugin.c void register_tool(plugin_pointers_t *)
+gcc -O0 -g -o program_static main.o libplugin.a -Wl,--whole-archive libtool1.a libtool2.a -Wl,--no-whole-archive -static
+gcc -shared -O0 -g -o libplugin.so plugin.o
+gcc -shared -O0 -g -o libtool1.so tool1.o
+gcc -shared -O0 -g -o libtool2.so tool2.o
+gcc -O0 -g -o program_dynamic main.o -Wl,-rpath,/storage/users/khuck/src/plugin_registration_test -L/storage/users/khuck/src/plugin_registration_test -lplugin -ltool1 -ltool2
+gcc -O0 -g -o program_dynamic_notool main.o -Wl,-rpath,/storage/users/khuck/src/plugin_registration_test -L/storage/users/khuck/src/plugin_registration_test -lplugin
+gcc -O0 -g -fPIC -Werror -Wall -ansi -pedantic -c main_no_plugin.c -o main_no_plugin.o
+gcc -O0 -g -o program_tool_only main_no_plugin.o -Wl,--whole-archive libtool1.a -Wl,--no-whole-archive -static
+################# Dynamic, no plugin linked #################
+main_no_plugin.c main
+(no other output expected...)
+################# Static, no tool linked ####################
+main.c main
+plugin.c plugin_init
+plugin.c plugin_function
+plugin.c plugin_finalize
+################# Static, tools linked   ####################
+tool1.c initme
+plugin.c register_tool
 Registering one
-tool2.c void initme(void)
-plugin.c void register_tool(plugin_pointers_t *)
+tool2.c initme
+plugin.c register_tool
 Registering two
-plugin.c void plugin_init(void)
-tool1.c void tool_init(void)
-tool2.c void tool2_init(void)
-plugin.c void plugin_function(void)
-tool1.c void tool_function(void)
-tool2.c void tool2_function(void)
-plugin.c void plugin_finalize(void)
-tool1.c void tool_finalize(void)
-tool2.c void tool2_finalize(void)
-##################### Dynamic, no tool linked ###################
-plugin.c void plugin_init(void)
-plugin.c void plugin_function(void)
-plugin.c void plugin_finalize(void)
-##################### Dynamic, tool linked    ###################
-tool1.c void initme(void)
-plugin.c void register_tool(plugin_pointers_t *)
-Registering one
-tool2.c void initme(void)
-plugin.c void register_tool(plugin_pointers_t *)
+main.c main
+plugin.c plugin_init
+tool1.c tool_init
+tool2.c tool2_init
+plugin.c plugin_function
+tool1.c tool_function
+tool2.c tool2_function
+plugin.c plugin_finalize
+tool1.c tool_finalize
+tool2.c tool2_finalize
+################# Dynamic, no tool linked ###################
+main.c main
+plugin.c plugin_init
+plugin.c plugin_function
+plugin.c plugin_finalize
+################# Dynamic, tools linked   ###################
+tool2.c initme
+plugin.c register_tool
 Registering two
-plugin.c void plugin_init(void)
-tool1.c void tool_init(void)
-tool2.c void tool2_init(void)
-plugin.c void plugin_function(void)
-tool1.c void tool_function(void)
-tool2.c void tool2_function(void)
-plugin.c void plugin_finalize(void)
-tool1.c void tool_finalize(void)
-tool2.c void tool2_finalize(void)
-##################### Dynamic, one tool preload #################
-tool1.c void initme(void)
-plugin.c void register_tool(plugin_pointers_t *)
+tool1.c initme
+plugin.c register_tool
 Registering one
-plugin.c void plugin_init(void)
-tool1.c void tool_init(void)
-plugin.c void plugin_function(void)
-tool1.c void tool_function(void)
-plugin.c void plugin_finalize(void)
-tool1.c void tool_finalize(void)
-##################### Dynamic, two tool preload #################
-tool1.c void initme(void)
-plugin.c void register_tool(plugin_pointers_t *)
+main.c main
+plugin.c plugin_init
+tool2.c tool2_init
+tool1.c tool_init
+plugin.c plugin_function
+tool2.c tool2_function
+tool1.c tool_function
+plugin.c plugin_finalize
+tool2.c tool2_finalize
+tool1.c tool_finalize
+################# Dynamic, one tool preload #################
+tool1.c initme
+plugin.c register_tool
 Registering one
-tool2.c void initme(void)
-plugin.c void register_tool(plugin_pointers_t *)
+main.c main
+plugin.c plugin_init
+tool1.c tool_init
+plugin.c plugin_function
+tool1.c tool_function
+plugin.c plugin_finalize
+tool1.c tool_finalize
+################# Dynamic, two tool preload #################
+tool2.c initme
+plugin.c register_tool
 Registering two
-plugin.c void plugin_init(void)
-tool1.c void tool_init(void)
-tool2.c void tool2_init(void)
-plugin.c void plugin_function(void)
-tool1.c void tool_function(void)
-tool2.c void tool2_function(void)
-plugin.c void plugin_finalize(void)
-tool1.c void tool_finalize(void)
-tool2.c void tool2_finalize(void)
+tool1.c initme
+plugin.c register_tool
+Registering one
+main.c main
+plugin.c plugin_init
+tool2.c tool2_init
+tool1.c tool_init
+plugin.c plugin_function
+tool2.c tool2_function
+tool1.c tool_function
+plugin.c plugin_finalize
+tool2.c tool2_finalize
+tool1.c tool_finalize
 ```
