@@ -25,8 +25,10 @@ echo "################# Dynamic, no tool linked ###################"
 echo "################# Dynamic, tools linked   ###################"
 ./program_dynamic
 
-echo "################# Dynamic fortran, tools linked   ###########"
-./program_dynamic_fortran
+if [[ ${unamestr} != "Darwin" ]] ; then
+    echo "################# Dynamic fortran, tools linked   ###########"
+    ./program_dynamic_fortran
+fi
 
 echo "################# Dynamic, one tool preload #################"
 export ${preload}=./libtool1.${suffix}

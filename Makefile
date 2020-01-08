@@ -15,6 +15,7 @@ PWD_S := $(shell pwd)
 LDFLAGS_WHOLE :=
 SHARED_SUFFIX :=
 LDFLAGS_LINKERPATH := -Wl,-rpath,$(PWD_S) -L$(PWD_S)
+DEFAULT:=program_static_notool program_static program_dynamic program_dynamic_notool program_tool_only program_dynamic_fortran
 
 ifeq ($(UNAME_S),Darwin)
     LDFLAGS_WHOLE_ONE:=-Wl,-all_load libtool1.a
@@ -23,6 +24,7 @@ ifeq ($(UNAME_S),Darwin)
     LDFLAGS_STATIC:=
     LDFLAGS_DYNAMIC:=-shared
     LDFLAGS:=$(LDFLAGS) -undefined dynamic_lookup
+    DEFAULT:=program_static_notool program_static program_dynamic program_dynamic_notool program_tool_only
 else
     LDFLAGS_WHOLE_ONE:=-Wl,--whole-archive libtool1.a -Wl,--no-whole-archive
     LDFLAGS_WHOLE:=-Wl,--whole-archive libtool1.a libtool2.a -Wl,--no-whole-archive
@@ -30,7 +32,7 @@ else
     LDFLAGS_DYNAMIC:=-shared
 endif
 
-default: program_static_notool program_static program_dynamic program_dynamic_notool program_tool_only program_dynamic_fortran
+default: $(DEFAULT)
 
 program_static: main.o libplugin.a libtool1.a libtool2.a
 	$(CC) $(LDFLAGS) -o $@ main.o libplugin.a $(LDFLAGS_WHOLE) $(LDFLAGS_STATIC)
