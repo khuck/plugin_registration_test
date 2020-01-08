@@ -1,6 +1,8 @@
 CC=gcc
+FC=gfortran
 LDFLAGS_STATIC := -static
 CFLAGS := -O0 -g -fPIC
+FFLAGS := -O0 -g -fPIC
 ifeq ($(CC),gcc)
     CFLAGS := $(CFLAGS) -Werror -Wall -ansi -pedantic
 else
@@ -28,7 +30,7 @@ else
     LDFLAGS_DYNAMIC:=-shared
 endif
 
-default: program_static_notool program_static program_dynamic program_dynamic_notool program_tool_only
+default: program_static_notool program_static program_dynamic program_dynamic_notool program_tool_only program_dynamic_fortran
 
 program_static: main.o libplugin.a libtool1.a libtool2.a
 	$(CC) $(LDFLAGS) -o $@ main.o libplugin.a $(LDFLAGS_WHOLE) $(LDFLAGS_STATIC)
@@ -39,6 +41,9 @@ program_static_notool: main.o libplugin.a
 program_dynamic: main.o libplugin.$(SHARED_SUFFIX) libtool1.$(SHARED_SUFFIX) libtool2.$(SHARED_SUFFIX)
 	$(CC) $(LDFLAGS) -o $@ main.o $(LDFLAGS_LINKERPATH) -lplugin -ltool1 -ltool2
 
+program_dynamic_fortran: main_fortran.o libplugin.$(SHARED_SUFFIX) libtool1.$(SHARED_SUFFIX) libtool2.$(SHARED_SUFFIX)
+	$(FC) $(LDFLAGS) -o $@ main_fortran.o $(LDFLAGS_LINKERPATH) -lplugin -ltool1 -ltool2
+
 program_dynamic_notool: main.o libplugin.$(SHARED_SUFFIX)
 	$(CC) $(LDFLAGS) -o $@ main.o $(LDFLAGS_LINKERPATH) -lplugin
 
@@ -47,6 +52,9 @@ program_tool_only: main_no_plugin.o libtool1.a
 
 %.o : %.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@
+
+%.o : %.F90 $(HEADERS)
+	$(FC) $(FFLAGS) -c $< -o $@
 
 libtool1.a: tool1.o
 	ar -crs libtool1.a tool1.o

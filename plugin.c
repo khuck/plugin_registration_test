@@ -60,3 +60,8 @@ void register_tool(plugin_pointers_t * pointers) {
     num_tools = num_tools + 1;
 }
 
+/* Create Fortran bindings! */
+
+void plugin_init_(void) { plugin_init(); }
+void plugin_function_(void) { plugin_function(); }
+void plugin_finalize_(void) { plugin_finalize(); }

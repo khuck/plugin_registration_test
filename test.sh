@@ -25,6 +25,9 @@ echo "################# Dynamic, no tool linked ###################"
 echo "################# Dynamic, tools linked   ###################"
 ./program_dynamic
 
+echo "################# Dynamic fortran, tools linked   ###########"
+./program_dynamic_fortran
+
 echo "################# Dynamic, one tool preload #################"
 export ${preload}=./libtool1.${suffix}
 ./program_dynamic_notool
