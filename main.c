@@ -9,8 +9,8 @@
 
 int main (int argc, char * argv[]) {
     printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
-    plugin_init();
-    plugin_function();
-    plugin_finalize();
+    plugin_init_();
+    plugin_function_();
+    plugin_finalize_();
     return 0;
 }

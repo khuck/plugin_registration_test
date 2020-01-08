@@ -17,7 +17,7 @@ int num_tools = 0;
 /* For each tool registered, call the initialization function
    for the tool library */
 
-void plugin_init(void) {
+void plugin_init_(void) {
     int i;
     printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
     for (i = 0 ; i < num_tools ; i++) {
@@ -28,7 +28,7 @@ void plugin_init(void) {
 /* For each tool registered, call the example function
    for the tool library */
 
-void plugin_function(void) {
+void plugin_function_(void) {
     int i;
     printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
     for (i = 0 ; i < num_tools ; i++) {
@@ -39,7 +39,7 @@ void plugin_function(void) {
 /* For each tool registered, call the finalize function
    for the tool library */
 
-void plugin_finalize(void) {
+void plugin_finalize_(void) {
     int i;
     printf("%s %s\n", __FILE__, __PLUGIN_FUNCTION__);
     for (i = 0 ; i < num_tools ; i++) {
@@ -60,8 +60,3 @@ void register_tool(plugin_pointers_t * pointers) {
     num_tools = num_tools + 1;
 }
 
-/* Create Fortran bindings! */
-
-void plugin_init_(void) { plugin_init(); }
-void plugin_function_(void) { plugin_function(); }
-void plugin_finalize_(void) { plugin_finalize(); }
